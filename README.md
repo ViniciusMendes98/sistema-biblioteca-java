@@ -23,6 +23,15 @@ Na terceira etapa, o projeto possui:
 - repetição do menu até que o usuário escolha sair;
 - criação dinâmica de objetos `Livro`.
 
+## Regras de negócio planejadas
+
+- a biblioteca pode armazenar qualquer quantidade de livros;
+- cada usuário poderá ter somente um empréstimo ativo;
+- um livro indisponível não poderá ser emprestado;
+- após a devolução, o usuário poderá pegar outro livro e o livro devolvido ficará disponível novamente.
+
+Essas regras serão implementadas com uma classe `Usuario` e métodos de empréstimo e devolução. Elas permanecem documentadas enquanto a funcionalidade ainda não está pronta.
+
 ## Como executar
 
 Primeiro, compile o programa:
