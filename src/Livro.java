@@ -69,6 +69,10 @@ public class Livro {
         return disponivel;
     }
 
+    public boolean podeSerExcluido() {
+        return disponivel;
+    }
+
     public void emprestar() {
         if (!disponivel) {
             throw new IllegalStateException("O livro já está emprestado.");

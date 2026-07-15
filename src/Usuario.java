@@ -68,6 +68,10 @@ public class Usuario {
         return livroEmprestado != null;
     }
 
+    public boolean podeSerExcluido() {
+        return !possuiEmprestimoAtivo();
+    }
+
     public Optional<Livro> getLivroEmprestado() {
         return Optional.ofNullable(livroEmprestado);
     }
