@@ -1,9 +1,12 @@
+import java.util.Optional;
+
 public class Usuario {
 
     // O código representa a identidade do usuário e não deve mudar após o cadastro.
     private final int codigo;
     private String nome;
     private String email;
+    private Livro livroEmprestado;
 
     public Usuario(int codigo, String nome, String email) {
         if (codigo < 1) {
@@ -13,6 +16,7 @@ public class Usuario {
         this.codigo = codigo;
         setNome(nome);
         setEmail(email);
+        this.livroEmprestado = null;
     }
 
     public int getCodigo() {
@@ -60,10 +64,52 @@ public class Usuario {
                 && !emailNormalizado.contains(" ");
     }
 
+    public boolean possuiEmprestimoAtivo() {
+        return livroEmprestado != null;
+    }
+
+    public Optional<Livro> getLivroEmprestado() {
+        return Optional.ofNullable(livroEmprestado);
+    }
+
+    public void emprestarLivro(Livro livro) {
+        if (livro == null) {
+            throw new IllegalArgumentException("O livro não pode ser nulo.");
+        }
+
+        if (possuiEmprestimoAtivo()) {
+            throw new IllegalStateException("O usuário precisa devolver o livro atual antes de pegar outro.");
+        }
+
+        if (!livro.isDisponivel()) {
+            throw new IllegalStateException("O livro escolhido não está disponível.");
+        }
+
+        livro.emprestar();
+        livroEmprestado = livro;
+    }
+
+    public Livro devolverLivro() {
+        if (!possuiEmprestimoAtivo()) {
+            throw new IllegalStateException("O usuário não possui empréstimo ativo.");
+        }
+
+        Livro livroDevolvido = livroEmprestado;
+        livroDevolvido.devolver();
+        livroEmprestado = null;
+
+        return livroDevolvido;
+    }
+
     @Override
     public String toString() {
+        String emprestimo = possuiEmprestimoAtivo()
+                ? livroEmprestado.getCodigo() + " - " + livroEmprestado.getTitulo()
+                : "Nenhum";
+
         return "Código: " + codigo
                 + System.lineSeparator() + "Nome: " + nome
-                + System.lineSeparator() + "E-mail: " + email;
+                + System.lineSeparator() + "E-mail: " + email
+                + System.lineSeparator() + "Empréstimo ativo: " + emprestimo;
     }
 }

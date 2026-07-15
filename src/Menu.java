@@ -48,6 +48,12 @@ public class Menu {
                 case 6:
                     exibirBuscaUsuario();
                     break;
+                case 7:
+                    realizarEmprestimo();
+                    break;
+                case 8:
+                    realizarDevolucao();
+                    break;
                 case 0:
                     System.out.println("Programa encerrado. Até logo!");
                     break;
@@ -168,6 +174,70 @@ public class Menu {
         return Optional.empty();
     }
 
+    private void realizarEmprestimo() {
+        if (usuarios.isEmpty()) {
+            System.out.println("Nenhum usuário cadastrado.");
+            return;
+        }
+
+        if (livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+            return;
+        }
+
+        int codigoUsuario = lerNumeroPositivo("Digite o código do usuário: ");
+        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigoUsuario);
+
+        if (usuarioEncontrado.isEmpty()) {
+            System.out.println("Usuário não encontrado.");
+            return;
+        }
+
+        Usuario usuario = usuarioEncontrado.get();
+        if (usuario.possuiEmprestimoAtivo()) {
+            System.out.println("O usuário precisa devolver o livro atual antes de pegar outro.");
+            return;
+        }
+
+        int codigoLivro = lerNumeroPositivo("Digite o código do livro: ");
+        Optional<Livro> livroEncontrado = buscarLivroPorCodigo(codigoLivro);
+
+        if (livroEncontrado.isEmpty()) {
+            System.out.println("Livro não encontrado.");
+            return;
+        }
+
+        try {
+            Livro livro = livroEncontrado.get();
+            usuario.emprestarLivro(livro);
+            System.out.println("Empréstimo realizado com sucesso!");
+        } catch (IllegalStateException excecao) {
+            System.out.println(excecao.getMessage());
+        }
+    }
+
+    private void realizarDevolucao() {
+        if (usuarios.isEmpty()) {
+            System.out.println("Nenhum usuário cadastrado.");
+            return;
+        }
+
+        int codigoUsuario = lerNumeroPositivo("Digite o código do usuário: ");
+        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigoUsuario);
+
+        if (usuarioEncontrado.isEmpty()) {
+            System.out.println("Usuário não encontrado.");
+            return;
+        }
+
+        try {
+            Livro livroDevolvido = usuarioEncontrado.get().devolverLivro();
+            System.out.println("Livro devolvido com sucesso: " + livroDevolvido.getTitulo());
+        } catch (IllegalStateException excecao) {
+            System.out.println(excecao.getMessage());
+        }
+    }
+
     // Centralizar as validações evita duplicação e mantém o fluxo principal legível.
     private int lerNumeroInteiro(String mensagem) {
         while (true) {
@@ -256,6 +326,8 @@ public class Menu {
         System.out.println("4 - Listar usuários");
         System.out.println("5 - Buscar livro por código");
         System.out.println("6 - Buscar usuário por código");
+        System.out.println("7 - Emprestar livro");
+        System.out.println("8 - Devolver livro");
         System.out.println("0 - Sair");
     }
 }
