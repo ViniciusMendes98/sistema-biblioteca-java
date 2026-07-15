@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na oitava etapa, o projeto possui:
+Na nona etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -36,6 +36,7 @@ Na oitava etapa, o projeto possui:
 - empréstimo e devolução de livros;
 - limite de um empréstimo ativo por usuário;
 - controle de disponibilidade pela própria classe `Livro`;
+- testes automatizados das regras de negócio em Java puro;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
@@ -64,7 +65,21 @@ Depois, execute:
 java -cp src Principal
 ```
 
+## Como executar os testes
+
+Crie a pasta de saída e compile o projeto com os testes:
+
+```bash
+mkdir saida
+javac -encoding UTF-8 -d saida src/*.java testes/*.java
+```
+
+Execute a suíte:
+
+```bash
+java -cp saida TesteRegrasNegocio
+```
+
 ## Próximas etapas
 
 1. Salvar os dados em arquivo.
-2. Adicionar testes automatizados.

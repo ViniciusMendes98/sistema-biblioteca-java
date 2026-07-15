@@ -1,5 +1,6 @@
 # Arquivos gerados pela compilação do Java
 *.class
+saida/
 
 # Pastas criadas por ambientes de desenvolvimento
 .idea/
