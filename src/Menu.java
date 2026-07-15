@@ -9,21 +9,15 @@ import java.util.Scanner;
 public class Menu {
 
     private final Scanner leitor;
-    private final List<Livro> livros;
-    private final List<Usuario> usuarios;
+    private final Biblioteca biblioteca;
     private final RepositorioDados repositorioDados;
-    private int proximoCodigoLivro;
-    private int proximoCodigoUsuario;
 
     public Menu() {
         this.leitor = new Scanner(System.in);
         this.repositorioDados = new RepositorioDados(Path.of("dados", "biblioteca.properties"));
 
         DadosBiblioteca dados = carregarDados();
-        this.livros = dados.getLivros();
-        this.usuarios = dados.getUsuarios();
-        this.proximoCodigoLivro = dados.getProximoCodigoLivro();
-        this.proximoCodigoUsuario = dados.getProximoCodigoUsuario();
+        this.biblioteca = new Biblioteca(dados);
     }
 
     public void iniciar() {
@@ -98,16 +92,14 @@ public class Menu {
         String autor = lerTextoObrigatorio("Digite o autor: ");
         int anoPublicacao = lerAnoPublicacao();
 
-        Livro novoLivro = new Livro(proximoCodigoLivro, titulo, autor, anoPublicacao);
-        livros.add(novoLivro);
-        proximoCodigoLivro++;
+        biblioteca.cadastrarLivro(titulo, autor, anoPublicacao);
         salvarDados();
 
         System.out.println("Livro cadastrado com sucesso!");
     }
 
     private void listarLivros() {
-        if (livros.isEmpty()) {
+        if (biblioteca.getLivros().isEmpty()) {
             System.out.println("Nenhum livro cadastrado.");
             return;
         }
@@ -115,7 +107,7 @@ public class Menu {
         System.out.println("=== LIVROS CADASTRADOS ===");
 
         int numeroLivro = 1;
-        for (Livro livro : livros) {
+        for (Livro livro : biblioteca.getLivros()) {
             System.out.println("Livro " + numeroLivro);
             System.out.println(livro);
             System.out.println();
@@ -127,36 +119,34 @@ public class Menu {
         String nome = lerTextoObrigatorio("Digite o nome: ");
         String email = lerEmail();
 
-        Usuario novoUsuario = new Usuario(proximoCodigoUsuario, nome, email);
-        usuarios.add(novoUsuario);
-        proximoCodigoUsuario++;
+        biblioteca.cadastrarUsuario(nome, email);
         salvarDados();
 
         System.out.println("Usuário cadastrado com sucesso!");
     }
 
     private void listarUsuarios() {
-        if (usuarios.isEmpty()) {
+        if (biblioteca.getUsuarios().isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
             return;
         }
 
         System.out.println("=== USUÁRIOS CADASTRADOS ===");
 
-        for (Usuario usuario : usuarios) {
+        for (Usuario usuario : biblioteca.getUsuarios()) {
             System.out.println(usuario);
             System.out.println();
         }
     }
 
     private void exibirBuscaLivro() {
-        if (livros.isEmpty()) {
+        if (biblioteca.getLivros().isEmpty()) {
             System.out.println("Nenhum livro cadastrado.");
             return;
         }
 
         int codigo = lerNumeroPositivo("Digite o código do livro: ");
-        Optional<Livro> livroEncontrado = buscarLivroPorCodigo(codigo);
+        Optional<Livro> livroEncontrado = biblioteca.buscarLivroPorCodigo(codigo);
 
         if (livroEncontrado.isPresent()) {
             System.out.println(livroEncontrado.get());
@@ -166,13 +156,13 @@ public class Menu {
     }
 
     private void exibirBuscaUsuario() {
-        if (usuarios.isEmpty()) {
+        if (biblioteca.getUsuarios().isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
             return;
         }
 
         int codigo = lerNumeroPositivo("Digite o código do usuário: ");
-        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigo);
+        Optional<Usuario> usuarioEncontrado = biblioteca.buscarUsuarioPorCodigo(codigo);
 
         if (usuarioEncontrado.isPresent()) {
             System.out.println(usuarioEncontrado.get());
@@ -181,39 +171,19 @@ public class Menu {
         }
     }
 
-    private Optional<Livro> buscarLivroPorCodigo(int codigo) {
-        for (Livro livro : livros) {
-            if (livro.getCodigo() == codigo) {
-                return Optional.of(livro);
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    private Optional<Usuario> buscarUsuarioPorCodigo(int codigo) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.getCodigo() == codigo) {
-                return Optional.of(usuario);
-            }
-        }
-
-        return Optional.empty();
-    }
-
     private void realizarEmprestimo() {
-        if (usuarios.isEmpty()) {
+        if (biblioteca.getUsuarios().isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
             return;
         }
 
-        if (livros.isEmpty()) {
+        if (biblioteca.getLivros().isEmpty()) {
             System.out.println("Nenhum livro cadastrado.");
             return;
         }
 
         int codigoUsuario = lerNumeroPositivo("Digite o código do usuário: ");
-        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigoUsuario);
+        Optional<Usuario> usuarioEncontrado = biblioteca.buscarUsuarioPorCodigo(codigoUsuario);
 
         if (usuarioEncontrado.isEmpty()) {
             System.out.println("Usuário não encontrado.");
@@ -227,7 +197,7 @@ public class Menu {
         }
 
         int codigoLivro = lerNumeroPositivo("Digite o código do livro: ");
-        Optional<Livro> livroEncontrado = buscarLivroPorCodigo(codigoLivro);
+        Optional<Livro> livroEncontrado = biblioteca.buscarLivroPorCodigo(codigoLivro);
 
         if (livroEncontrado.isEmpty()) {
             System.out.println("Livro não encontrado.");
@@ -245,13 +215,13 @@ public class Menu {
     }
 
     private void realizarDevolucao() {
-        if (usuarios.isEmpty()) {
+        if (biblioteca.getUsuarios().isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
             return;
         }
 
         int codigoUsuario = lerNumeroPositivo("Digite o código do usuário: ");
-        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigoUsuario);
+        Optional<Usuario> usuarioEncontrado = biblioteca.buscarUsuarioPorCodigo(codigoUsuario);
 
         if (usuarioEncontrado.isEmpty()) {
             System.out.println("Usuário não encontrado.");
@@ -268,13 +238,13 @@ public class Menu {
     }
 
     private void editarLivro() {
-        if (livros.isEmpty()) {
+        if (biblioteca.getLivros().isEmpty()) {
             System.out.println("Nenhum livro cadastrado.");
             return;
         }
 
         int codigo = lerNumeroPositivo("Digite o código do livro: ");
-        Optional<Livro> livroEncontrado = buscarLivroPorCodigo(codigo);
+        Optional<Livro> livroEncontrado = biblioteca.buscarLivroPorCodigo(codigo);
 
         if (livroEncontrado.isEmpty()) {
             System.out.println("Livro não encontrado.");
@@ -295,13 +265,13 @@ public class Menu {
     }
 
     private void editarUsuario() {
-        if (usuarios.isEmpty()) {
+        if (biblioteca.getUsuarios().isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
             return;
         }
 
         int codigo = lerNumeroPositivo("Digite o código do usuário: ");
-        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigo);
+        Optional<Usuario> usuarioEncontrado = biblioteca.buscarUsuarioPorCodigo(codigo);
 
         if (usuarioEncontrado.isEmpty()) {
             System.out.println("Usuário não encontrado.");
@@ -320,13 +290,13 @@ public class Menu {
     }
 
     private void excluirLivro() {
-        if (livros.isEmpty()) {
+        if (biblioteca.getLivros().isEmpty()) {
             System.out.println("Nenhum livro cadastrado.");
             return;
         }
 
         int codigo = lerNumeroPositivo("Digite o código do livro: ");
-        Optional<Livro> livroEncontrado = buscarLivroPorCodigo(codigo);
+        Optional<Livro> livroEncontrado = biblioteca.buscarLivroPorCodigo(codigo);
 
         if (livroEncontrado.isEmpty()) {
             System.out.println("Livro não encontrado.");
@@ -344,19 +314,19 @@ public class Menu {
             return;
         }
 
-        livros.remove(livro);
+        biblioteca.excluirLivro(livro);
         salvarDados();
         System.out.println("Livro excluído com sucesso!");
     }
 
     private void excluirUsuario() {
-        if (usuarios.isEmpty()) {
+        if (biblioteca.getUsuarios().isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
             return;
         }
 
         int codigo = lerNumeroPositivo("Digite o código do usuário: ");
-        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigo);
+        Optional<Usuario> usuarioEncontrado = biblioteca.buscarUsuarioPorCodigo(codigo);
 
         if (usuarioEncontrado.isEmpty()) {
             System.out.println("Usuário não encontrado.");
@@ -374,67 +344,46 @@ public class Menu {
             return;
         }
 
-        usuarios.remove(usuario);
+        biblioteca.excluirUsuario(usuario);
         salvarDados();
         System.out.println("Usuário excluído com sucesso!");
     }
 
     private void listarLivrosDisponiveis() {
-        boolean encontrouLivro = false;
+        List<Livro> livrosDisponiveis = biblioteca.getLivrosDisponiveis();
 
         System.out.println("=== LIVROS DISPONÍVEIS ===");
-        for (Livro livro : livros) {
-            if (livro.isDisponivel()) {
-                System.out.println(livro.getCodigo() + " - " + livro.getTitulo());
-                encontrouLivro = true;
-            }
+        for (Livro livro : livrosDisponiveis) {
+            System.out.println(livro.getCodigo() + " - " + livro.getTitulo());
         }
 
-        if (!encontrouLivro) {
+        if (livrosDisponiveis.isEmpty()) {
             System.out.println("Nenhum livro disponível.");
         }
     }
 
     private void listarEmprestimosAtivos() {
-        boolean encontrouEmprestimo = false;
+        List<Usuario> usuariosComEmprestimo = biblioteca.getUsuariosComEmprestimo();
 
         System.out.println("=== EMPRÉSTIMOS ATIVOS ===");
-        for (Usuario usuario : usuarios) {
-            if (usuario.possuiEmprestimoAtivo()) {
-                Livro livro = usuario.getLivroEmprestado().orElseThrow();
-                System.out.println("Usuário: " + usuario.getCodigo() + " - " + usuario.getNome());
-                System.out.println("Livro: " + livro.getCodigo() + " - " + livro.getTitulo());
-                System.out.println();
-                encontrouEmprestimo = true;
-            }
+        for (Usuario usuario : usuariosComEmprestimo) {
+            Livro livro = usuario.getLivroEmprestado().orElseThrow();
+            System.out.println("Usuário: " + usuario.getCodigo() + " - " + usuario.getNome());
+            System.out.println("Livro: " + livro.getCodigo() + " - " + livro.getTitulo());
+            System.out.println();
         }
 
-        if (!encontrouEmprestimo) {
+        if (usuariosComEmprestimo.isEmpty()) {
             System.out.println("Nenhum empréstimo ativo.");
         }
     }
 
     private void exibirResumo() {
-        int livrosDisponiveis = 0;
-        int emprestimosAtivos = 0;
-
-        for (Livro livro : livros) {
-            if (livro.isDisponivel()) {
-                livrosDisponiveis++;
-            }
-        }
-
-        for (Usuario usuario : usuarios) {
-            if (usuario.possuiEmprestimoAtivo()) {
-                emprestimosAtivos++;
-            }
-        }
-
         System.out.println("=== RESUMO DA BIBLIOTECA ===");
-        System.out.println("Livros cadastrados: " + livros.size());
-        System.out.println("Livros disponíveis: " + livrosDisponiveis);
-        System.out.println("Livros emprestados: " + emprestimosAtivos);
-        System.out.println("Usuários cadastrados: " + usuarios.size());
+        System.out.println("Livros cadastrados: " + biblioteca.getLivros().size());
+        System.out.println("Livros disponíveis: " + biblioteca.getLivrosDisponiveis().size());
+        System.out.println("Livros emprestados: " + biblioteca.getUsuariosComEmprestimo().size());
+        System.out.println("Usuários cadastrados: " + biblioteca.getUsuarios().size());
     }
 
     // Centralizar as validações evita duplicação e mantém o fluxo principal legível.
@@ -502,7 +451,7 @@ public class Menu {
             String email = lerTextoObrigatorio("Digite o e-mail: ");
 
             if (Usuario.isEmailValido(email)) {
-                if (!emailJaCadastrado(email, usuarioIgnorado)) {
+                if (!biblioteca.emailJaCadastrado(email, usuarioIgnorado)) {
                     return email;
                 }
 
@@ -512,16 +461,6 @@ public class Menu {
 
             System.out.println("Digite um e-mail válido.");
         }
-    }
-
-    private boolean emailJaCadastrado(String email, Usuario usuarioIgnorado) {
-        for (Usuario usuario : usuarios) {
-            if (usuario != usuarioIgnorado && usuario.getEmail().equalsIgnoreCase(email)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private int lerAnoPublicacao() {
@@ -570,7 +509,12 @@ public class Menu {
 
     private void salvarDados() {
         try {
-            repositorioDados.salvar(livros, usuarios, proximoCodigoLivro, proximoCodigoUsuario);
+            DadosBiblioteca dados = biblioteca.criarDados();
+            repositorioDados.salvar(
+                    dados.getLivros(),
+                    dados.getUsuarios(),
+                    dados.getProximoCodigoLivro(),
+                    dados.getProximoCodigoUsuario());
         } catch (IOException excecao) {
             System.out.println("Atenção: não foi possível salvar os dados: " + excecao.getMessage());
         }

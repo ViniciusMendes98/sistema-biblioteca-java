@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na décima terceira etapa, o projeto possui:
+Na décima quarta etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -46,6 +46,8 @@ Na décima terceira etapa, o projeto possui:
 - relatório de livros disponíveis;
 - relatório de empréstimos ativos;
 - resumo com totais da biblioteca;
+- classe `Biblioteca` responsável pelas coleções e operações de cadastro;
+- classe `Menu` focada na interação pelo terminal;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
@@ -69,6 +71,15 @@ sem necessidade de banco de dados ou biblioteca externa.
 A classe `RepositorioDados` concentra a leitura e a gravação. Dessa forma, a classe
 `Menu` continua cuidando da interação com o usuário e não precisa conhecer os detalhes
 do formato do arquivo.
+
+## Organização das classes
+
+- `Principal`: inicia a aplicação;
+- `Menu`: recebe dados e apresenta mensagens no terminal;
+- `Biblioteca`: gerencia coleções, códigos, buscas e exclusões;
+- `Livro` e `Usuario`: protegem os dados e as regras de negócio;
+- `RepositorioDados`: salva e carrega o arquivo;
+- `DadosBiblioteca`: transporta os dados entre a biblioteca e o repositório.
 
 ## Como executar
 
@@ -101,4 +112,4 @@ java -cp saida TesteRegrasNegocio
 
 ## Próximas etapas
 
-1. Separar as operações da biblioteca da classe `Menu`.
+1. Ampliar os testes de validação e finalizar a documentação.

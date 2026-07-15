@@ -19,6 +19,7 @@ public class TesteRegrasNegocio {
         executarTeste("Dados permanecem após salvar e carregar", TesteRegrasNegocio::deveSalvarECarregarDados);
         executarTeste("Edição mantém os códigos das entidades", TesteRegrasNegocio::deveEditarEntidades);
         executarTeste("Empréstimo bloqueia exclusão", TesteRegrasNegocio::deveControlarExclusao);
+        executarTeste("Biblioteca gerencia os cadastros", TesteRegrasNegocio::deveGerenciarBiblioteca);
 
         System.out.println();
         System.out.println(testesAprovados + " testes aprovados com sucesso.");
@@ -175,6 +176,36 @@ public class TesteRegrasNegocio {
 
         verificar(livro.podeSerExcluido(), "O livro devolvido poderia ser excluído.");
         verificar(usuario.podeSerExcluido(), "O usuário sem empréstimo poderia ser excluído.");
+    }
+
+    private static void deveGerenciarBiblioteca() {
+        DadosBiblioteca dados = new DadosBiblioteca(new ArrayList<>(), new ArrayList<>(), 1, 1);
+        Biblioteca biblioteca = new Biblioteca(dados);
+
+        Livro livro = biblioteca.cadastrarLivro("Livro Um", "Autor", 2000);
+        Usuario usuario = biblioteca.cadastrarUsuario("Ana", "ana@exemplo.com");
+
+        verificar(livro.getCodigo() == 1, "O primeiro livro deveria receber o código 1.");
+        verificar(usuario.getCodigo() == 1, "O primeiro usuário deveria receber o código 1.");
+        verificar(biblioteca.buscarLivroPorCodigo(1).orElseThrow() == livro,
+                "A busca deveria retornar o livro cadastrado.");
+        verificar(biblioteca.buscarUsuarioPorCodigo(1).orElseThrow() == usuario,
+                "A busca deveria retornar o usuário cadastrado.");
+        verificar(biblioteca.emailJaCadastrado("ANA@EXEMPLO.COM", null),
+                "A verificação de e-mail não deveria diferenciar maiúsculas de minúsculas.");
+
+        usuario.emprestarLivro(livro);
+        esperarExcecao(IllegalStateException.class, () -> biblioteca.excluirLivro(livro));
+        esperarExcecao(IllegalStateException.class, () -> biblioteca.excluirUsuario(usuario));
+
+        usuario.devolverLivro();
+        biblioteca.excluirLivro(livro);
+        biblioteca.excluirUsuario(usuario);
+
+        verificar(biblioteca.getLivros().isEmpty(), "O livro deveria ser removido.");
+        verificar(biblioteca.getUsuarios().isEmpty(), "O usuário deveria ser removido.");
+        verificar(biblioteca.cadastrarLivro("Livro Dois", "Autor", 2001).getCodigo() == 2,
+                "O código excluído não deveria ser reutilizado.");
     }
 
     private static Livro criarLivro(int codigo, String titulo) {
