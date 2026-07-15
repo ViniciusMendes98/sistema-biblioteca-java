@@ -4,13 +4,16 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Nesta primeira etapa, o projeto possui:
+Na segunda etapa, o projeto possui:
 
 - uma classe principal;
+- uma classe que representa um livro;
+- atributos privados e métodos públicos;
+- um objeto criado com título, autor e ano de publicação;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
-- tratamento de opções que ainda não existem.
+- exibição das informações do livro pela opção `2`.
 
 ## Como executar
 
@@ -28,8 +31,8 @@ java -cp src Principal
 
 ## Próximas etapas
 
-1. Criar a classe `Livro`.
-2. Cadastrar livros.
+1. Cadastrar livros.
+2. Armazenar vários livros em uma lista.
 3. Listar os livros cadastrados.
 4. Buscar livros.
 5. Emprestar e devolver livros.
