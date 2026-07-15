@@ -69,6 +69,22 @@ public class Livro {
         return disponivel;
     }
 
+    public void emprestar() {
+        if (!disponivel) {
+            throw new IllegalStateException("O livro já está emprestado.");
+        }
+
+        disponivel = false;
+    }
+
+    public void devolver() {
+        if (disponivel) {
+            throw new IllegalStateException("O livro já está disponível.");
+        }
+
+        disponivel = true;
+    }
+
     @Override
     public String toString() {
         return "Código: " + codigo

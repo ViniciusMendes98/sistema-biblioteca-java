@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na sétima etapa, o projeto possui:
+Na oitava etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -33,19 +33,22 @@ Na sétima etapa, o projeto possui:
 - código sequencial e imutável para cada livro;
 - busca de livros e usuários pelo código;
 - uso de `Optional` para representar resultados de busca;
+- empréstimo e devolução de livros;
+- limite de um empréstimo ativo por usuário;
+- controle de disponibilidade pela própria classe `Livro`;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
 - criação dinâmica de objetos `Livro`.
 
-## Regras de negócio planejadas
+## Regras de negócio
 
 - a biblioteca pode armazenar qualquer quantidade de livros;
 - cada usuário poderá ter somente um empréstimo ativo;
 - um livro indisponível não poderá ser emprestado;
 - após a devolução, o usuário poderá pegar outro livro e o livro devolvido ficará disponível novamente.
 
-Essas regras serão implementadas com uma classe `Usuario` e métodos de empréstimo e devolução. Elas permanecem documentadas enquanto a funcionalidade ainda não está pronta.
+Essas regras são protegidas pelos métodos de negócio das classes `Usuario` e `Livro`.
 
 ## Como executar
 
@@ -63,6 +66,5 @@ java -cp src Principal
 
 ## Próximas etapas
 
-1. Emprestar e devolver livros.
-2. Salvar os dados em arquivo.
-3. Adicionar testes automatizados.
+1. Salvar os dados em arquivo.
+2. Adicionar testes automatizados.
