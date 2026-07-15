@@ -1,8 +1,16 @@
+package testes;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import modelo.Biblioteca;
+import modelo.DadosBiblioteca;
+import modelo.Livro;
+import modelo.Usuario;
+import repositorio.RepositorioDados;
 
 public class TesteRegrasNegocio {
 
@@ -118,7 +126,7 @@ public class TesteRegrasNegocio {
             usuarios.add(usuario);
 
             RepositorioDados repositorio = new RepositorioDados(arquivo);
-            repositorio.salvar(livros, usuarios, 3, 2);
+            repositorio.salvar(new DadosBiblioteca(livros, usuarios, 3, 2));
             DadosBiblioteca dadosCarregados = repositorio.carregar();
 
             verificar(dadosCarregados.getLivros().size() == 2,

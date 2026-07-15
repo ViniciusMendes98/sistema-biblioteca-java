@@ -1,3 +1,5 @@
+package modelo;
+
 import java.time.Year;
 
 public class Livro {
@@ -18,8 +20,6 @@ public class Livro {
         setTitulo(titulo);
         setAutor(autor);
         setAnoPublicacao(anoPublicacao);
-
-        // Regra de negócio: todo livro novo começa disponível para empréstimo.
         this.disponivel = true;
     }
 
