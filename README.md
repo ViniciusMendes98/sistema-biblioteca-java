@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na sexta etapa, o projeto possui:
+Na sétima etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -30,6 +30,9 @@ Na sexta etapa, o projeto possui:
 - validação de formato de e-mail;
 - bloqueio de e-mails duplicados;
 - código sequencial e imutável para cada usuário;
+- código sequencial e imutável para cada livro;
+- busca de livros e usuários pelo código;
+- uso de `Optional` para representar resultados de busca;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
@@ -60,7 +63,6 @@ java -cp src Principal
 
 ## Próximas etapas
 
-1. Buscar livros e usuários pelo código.
-2. Emprestar e devolver livros.
-3. Salvar os dados em arquivo.
-4. Adicionar testes automatizados.
+1. Emprestar e devolver livros.
+2. Salvar os dados em arquivo.
+3. Adicionar testes automatizados.

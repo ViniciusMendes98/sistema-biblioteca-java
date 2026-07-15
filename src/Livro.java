@@ -3,18 +3,28 @@ import java.time.Year;
 public class Livro {
 
     // Encapsulamento: os dados só podem ser acessados pelos métodos da classe.
+    private final int codigo;
     private String titulo;
     private String autor;
     private int anoPublicacao;
     private boolean disponivel;
 
-    public Livro(String titulo, String autor, int anoPublicacao) {
+    public Livro(int codigo, String titulo, String autor, int anoPublicacao) {
+        if (codigo < 1) {
+            throw new IllegalArgumentException("O código deve ser maior que zero.");
+        }
+
+        this.codigo = codigo;
         setTitulo(titulo);
         setAutor(autor);
         setAnoPublicacao(anoPublicacao);
 
         // Regra de negócio: todo livro novo começa disponível para empréstimo.
         this.disponivel = true;
+    }
+
+    public int getCodigo() {
+        return codigo;
     }
 
     public String getTitulo() {
@@ -61,7 +71,8 @@ public class Livro {
 
     @Override
     public String toString() {
-        return "Título: " + titulo
+        return "Código: " + codigo
+                + System.lineSeparator() + "Título: " + titulo
                 + System.lineSeparator() + "Autor: " + autor
                 + System.lineSeparator() + "Ano de publicação: " + anoPublicacao
                 + System.lineSeparator() + "Disponível: " + (disponivel ? "Sim" : "Não");

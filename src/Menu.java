@@ -1,6 +1,7 @@
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Menu {
@@ -8,6 +9,7 @@ public class Menu {
     private final Scanner leitor;
     private final List<Livro> livros;
     private final List<Usuario> usuarios;
+    private int proximoCodigoLivro;
     private int proximoCodigoUsuario;
 
     public Menu() {
@@ -16,6 +18,7 @@ public class Menu {
         // Usar a interface List reduz o acoplamento com a implementação ArrayList.
         this.livros = new ArrayList<>();
         this.usuarios = new ArrayList<>();
+        this.proximoCodigoLivro = 1;
         this.proximoCodigoUsuario = 1;
     }
 
@@ -39,6 +42,12 @@ public class Menu {
                 case 4:
                     listarUsuarios();
                     break;
+                case 5:
+                    exibirBuscaLivro();
+                    break;
+                case 6:
+                    exibirBuscaUsuario();
+                    break;
                 case 0:
                     System.out.println("Programa encerrado. Até logo!");
                     break;
@@ -58,8 +67,9 @@ public class Menu {
         String autor = lerTextoObrigatorio("Digite o autor: ");
         int anoPublicacao = lerAnoPublicacao();
 
-        Livro novoLivro = new Livro(titulo, autor, anoPublicacao);
+        Livro novoLivro = new Livro(proximoCodigoLivro, titulo, autor, anoPublicacao);
         livros.add(novoLivro);
+        proximoCodigoLivro++;
 
         System.out.println("Livro cadastrado com sucesso!");
     }
@@ -106,6 +116,58 @@ public class Menu {
         }
     }
 
+    private void exibirBuscaLivro() {
+        if (livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+            return;
+        }
+
+        int codigo = lerNumeroPositivo("Digite o código do livro: ");
+        Optional<Livro> livroEncontrado = buscarLivroPorCodigo(codigo);
+
+        if (livroEncontrado.isPresent()) {
+            System.out.println(livroEncontrado.get());
+        } else {
+            System.out.println("Livro não encontrado.");
+        }
+    }
+
+    private void exibirBuscaUsuario() {
+        if (usuarios.isEmpty()) {
+            System.out.println("Nenhum usuário cadastrado.");
+            return;
+        }
+
+        int codigo = lerNumeroPositivo("Digite o código do usuário: ");
+        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigo);
+
+        if (usuarioEncontrado.isPresent()) {
+            System.out.println(usuarioEncontrado.get());
+        } else {
+            System.out.println("Usuário não encontrado.");
+        }
+    }
+
+    private Optional<Livro> buscarLivroPorCodigo(int codigo) {
+        for (Livro livro : livros) {
+            if (livro.getCodigo() == codigo) {
+                return Optional.of(livro);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    private Optional<Usuario> buscarUsuarioPorCodigo(int codigo) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getCodigo() == codigo) {
+                return Optional.of(usuario);
+            }
+        }
+
+        return Optional.empty();
+    }
+
     // Centralizar as validações evita duplicação e mantém o fluxo principal legível.
     private int lerNumeroInteiro(String mensagem) {
         while (true) {
@@ -117,6 +179,18 @@ public class Menu {
             } catch (NumberFormatException excecao) {
                 System.out.println("Digite um número inteiro válido.");
             }
+        }
+    }
+
+    private int lerNumeroPositivo(String mensagem) {
+        while (true) {
+            int numero = lerNumeroInteiro(mensagem);
+
+            if (numero > 0) {
+                return numero;
+            }
+
+            System.out.println("Digite um número maior que zero.");
         }
     }
 
@@ -180,6 +254,8 @@ public class Menu {
         System.out.println("2 - Listar livros");
         System.out.println("3 - Cadastrar usuário");
         System.out.println("4 - Listar usuários");
+        System.out.println("5 - Buscar livro por código");
+        System.out.println("6 - Buscar usuário por código");
         System.out.println("0 - Sair");
     }
 }
