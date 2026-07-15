@@ -1,3 +1,4 @@
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,7 +16,7 @@ public class Principal {
         do {
             exibirMenu();
 
-            opcao = Integer.parseInt(leitor.nextLine());
+            opcao = lerNumeroInteiro(leitor, "Escolha uma opção: ");
 
             switch (opcao) {
                 case 1:
@@ -39,19 +40,55 @@ public class Principal {
     }
 
     private static void cadastrarLivro(Scanner leitor, List<Livro> livros) {
-        System.out.print("Digite o título: ");
-        String titulo = leitor.nextLine().trim();
-
-        System.out.print("Digite o autor: ");
-        String autor = leitor.nextLine().trim();
-
-        System.out.print("Digite o ano de publicação: ");
-        int anoPublicacao = Integer.parseInt(leitor.nextLine());
+        String titulo = lerTextoObrigatorio(leitor, "Digite o título: ");
+        String autor = lerTextoObrigatorio(leitor, "Digite o autor: ");
+        int anoPublicacao = lerAnoPublicacao(leitor);
 
         Livro novoLivro = new Livro(titulo, autor, anoPublicacao);
         livros.add(novoLivro);
 
         System.out.println("Livro cadastrado com sucesso!");
+    }
+
+    // Centralizar as validações evita duplicação e mantém o fluxo principal legível.
+    private static int lerNumeroInteiro(Scanner leitor, String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            String entrada = leitor.nextLine().trim();
+
+            try {
+                return Integer.parseInt(entrada);
+            } catch (NumberFormatException excecao) {
+                System.out.println("Digite um número inteiro válido.");
+            }
+        }
+    }
+
+    private static String lerTextoObrigatorio(Scanner leitor, String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            String texto = leitor.nextLine().trim();
+
+            if (!texto.isEmpty()) {
+                return texto;
+            }
+
+            System.out.println("O campo não pode ficar vazio.");
+        }
+    }
+
+    private static int lerAnoPublicacao(Scanner leitor) {
+        int anoAtual = Year.now().getValue();
+
+        while (true) {
+            int anoPublicacao = lerNumeroInteiro(leitor, "Digite o ano de publicação: ");
+
+            if (anoPublicacao >= 1 && anoPublicacao <= anoAtual) {
+                return anoPublicacao;
+            }
+
+            System.out.println("O ano deve estar entre 1 e " + anoAtual + ".");
+        }
     }
 
     private static void listarLivros(List<Livro> livros) {
@@ -77,6 +114,5 @@ public class Principal {
         System.out.println("1 - Cadastrar livro");
         System.out.println("2 - Listar livros");
         System.out.println("0 - Sair");
-        System.out.print("Escolha uma opção: ");
     }
 }

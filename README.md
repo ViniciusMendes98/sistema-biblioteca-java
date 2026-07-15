@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na terceira etapa, o projeto possui:
+Na quarta etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -18,6 +18,9 @@ Na terceira etapa, o projeto possui:
 - cadastro de livros pelo terminal;
 - armazenamento de vários livros em uma `ArrayList`;
 - listagem dos livros cadastrados;
+- validação de números com tratamento de exceções;
+- validação de título e autor obrigatórios;
+- validação do ano de publicação;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
@@ -48,7 +51,7 @@ java -cp src Principal
 
 ## Próximas etapas
 
-1. Validar os dados digitados pelo usuário.
+1. Criar e cadastrar usuários.
 2. Buscar livros.
 3. Emprestar e devolver livros.
 4. Salvar os dados em arquivo.
