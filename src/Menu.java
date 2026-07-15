@@ -58,6 +58,12 @@ public class Menu {
                 case 8:
                     realizarDevolucao();
                     break;
+                case 9:
+                    editarLivro();
+                    break;
+                case 10:
+                    editarUsuario();
+                    break;
                 case 0:
                     System.out.println("Programa encerrado. Até logo!");
                     break;
@@ -246,6 +252,58 @@ public class Menu {
         }
     }
 
+    private void editarLivro() {
+        if (livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+            return;
+        }
+
+        int codigo = lerNumeroPositivo("Digite o código do livro: ");
+        Optional<Livro> livroEncontrado = buscarLivroPorCodigo(codigo);
+
+        if (livroEncontrado.isEmpty()) {
+            System.out.println("Livro não encontrado.");
+            return;
+        }
+
+        Livro livro = livroEncontrado.get();
+        String titulo = lerTextoObrigatorio("Digite o novo título: ");
+        String autor = lerTextoObrigatorio("Digite o novo autor: ");
+        int anoPublicacao = lerAnoPublicacao();
+
+        livro.setTitulo(titulo);
+        livro.setAutor(autor);
+        livro.setAnoPublicacao(anoPublicacao);
+        salvarDados();
+
+        System.out.println("Livro atualizado com sucesso!");
+    }
+
+    private void editarUsuario() {
+        if (usuarios.isEmpty()) {
+            System.out.println("Nenhum usuário cadastrado.");
+            return;
+        }
+
+        int codigo = lerNumeroPositivo("Digite o código do usuário: ");
+        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigo);
+
+        if (usuarioEncontrado.isEmpty()) {
+            System.out.println("Usuário não encontrado.");
+            return;
+        }
+
+        Usuario usuario = usuarioEncontrado.get();
+        String nome = lerTextoObrigatorio("Digite o novo nome: ");
+        String email = lerEmail(usuario);
+
+        usuario.setNome(nome);
+        usuario.setEmail(email);
+        salvarDados();
+
+        System.out.println("Usuário atualizado com sucesso!");
+    }
+
     // Centralizar as validações evita duplicação e mantém o fluxo principal legível.
     private int lerNumeroInteiro(String mensagem) {
         while (true) {
@@ -286,11 +344,15 @@ public class Menu {
     }
 
     private String lerEmail() {
+        return lerEmail(null);
+    }
+
+    private String lerEmail(Usuario usuarioIgnorado) {
         while (true) {
             String email = lerTextoObrigatorio("Digite o e-mail: ");
 
             if (Usuario.isEmailValido(email)) {
-                if (!emailJaCadastrado(email)) {
+                if (!emailJaCadastrado(email, usuarioIgnorado)) {
                     return email;
                 }
 
@@ -302,9 +364,9 @@ public class Menu {
         }
     }
 
-    private boolean emailJaCadastrado(String email) {
+    private boolean emailJaCadastrado(String email, Usuario usuarioIgnorado) {
         for (Usuario usuario : usuarios) {
-            if (usuario.getEmail().equalsIgnoreCase(email)) {
+            if (usuario != usuarioIgnorado && usuario.getEmail().equalsIgnoreCase(email)) {
                 return true;
             }
         }
@@ -336,6 +398,8 @@ public class Menu {
         System.out.println("6 - Buscar usuário por código");
         System.out.println("7 - Emprestar livro");
         System.out.println("8 - Devolver livro");
+        System.out.println("9 - Editar livro");
+        System.out.println("10 - Editar usuário");
         System.out.println("0 - Sair");
     }
 
