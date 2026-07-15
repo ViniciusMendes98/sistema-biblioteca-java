@@ -18,6 +18,7 @@ public class TesteRegrasNegocio {
         executarTeste("Entidades rejeitam dados inválidos", TesteRegrasNegocio::deveRejeitarDadosInvalidos);
         executarTeste("Dados permanecem após salvar e carregar", TesteRegrasNegocio::deveSalvarECarregarDados);
         executarTeste("Edição mantém os códigos das entidades", TesteRegrasNegocio::deveEditarEntidades);
+        executarTeste("Empréstimo bloqueia exclusão", TesteRegrasNegocio::deveControlarExclusao);
 
         System.out.println();
         System.out.println(testesAprovados + " testes aprovados com sucesso.");
@@ -155,6 +156,25 @@ public class TesteRegrasNegocio {
         verificar(usuario.getNome().equals("Ana Souza"), "O nome deveria ser atualizado.");
         verificar(usuario.getEmail().equals("ana.souza@exemplo.com"),
                 "O e-mail deveria ser atualizado.");
+    }
+
+    private static void deveControlarExclusao() {
+        Livro livro = criarLivro(1, "Livro Um");
+        Usuario usuario = criarUsuario(1, "Ana", "ana@exemplo.com");
+
+        verificar(livro.podeSerExcluido(), "Um livro disponível poderia ser excluído.");
+        verificar(usuario.podeSerExcluido(), "Um usuário sem empréstimo poderia ser excluído.");
+
+        usuario.emprestarLivro(livro);
+
+        verificar(!livro.podeSerExcluido(), "Um livro emprestado não poderia ser excluído.");
+        verificar(!usuario.podeSerExcluido(),
+                "Um usuário com empréstimo ativo não poderia ser excluído.");
+
+        usuario.devolverLivro();
+
+        verificar(livro.podeSerExcluido(), "O livro devolvido poderia ser excluído.");
+        verificar(usuario.podeSerExcluido(), "O usuário sem empréstimo poderia ser excluído.");
     }
 
     private static Livro criarLivro(int codigo, String titulo) {

@@ -64,6 +64,12 @@ public class Menu {
                 case 10:
                     editarUsuario();
                     break;
+                case 11:
+                    excluirLivro();
+                    break;
+                case 12:
+                    excluirUsuario();
+                    break;
                 case 0:
                     System.out.println("Programa encerrado. Até logo!");
                     break;
@@ -304,6 +310,66 @@ public class Menu {
         System.out.println("Usuário atualizado com sucesso!");
     }
 
+    private void excluirLivro() {
+        if (livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+            return;
+        }
+
+        int codigo = lerNumeroPositivo("Digite o código do livro: ");
+        Optional<Livro> livroEncontrado = buscarLivroPorCodigo(codigo);
+
+        if (livroEncontrado.isEmpty()) {
+            System.out.println("Livro não encontrado.");
+            return;
+        }
+
+        Livro livro = livroEncontrado.get();
+        if (!livro.podeSerExcluido()) {
+            System.out.println("Um livro emprestado não pode ser excluído.");
+            return;
+        }
+
+        if (!lerConfirmacao("Confirma a exclusão do livro? (S/N): ")) {
+            System.out.println("Exclusão cancelada.");
+            return;
+        }
+
+        livros.remove(livro);
+        salvarDados();
+        System.out.println("Livro excluído com sucesso!");
+    }
+
+    private void excluirUsuario() {
+        if (usuarios.isEmpty()) {
+            System.out.println("Nenhum usuário cadastrado.");
+            return;
+        }
+
+        int codigo = lerNumeroPositivo("Digite o código do usuário: ");
+        Optional<Usuario> usuarioEncontrado = buscarUsuarioPorCodigo(codigo);
+
+        if (usuarioEncontrado.isEmpty()) {
+            System.out.println("Usuário não encontrado.");
+            return;
+        }
+
+        Usuario usuario = usuarioEncontrado.get();
+        if (!usuario.podeSerExcluido()) {
+            System.out.println("Um usuário com empréstimo ativo não pode ser excluído.");
+            return;
+        }
+
+        if (!lerConfirmacao("Confirma a exclusão do usuário? (S/N): ")) {
+            System.out.println("Exclusão cancelada.");
+            return;
+        }
+
+        usuarios.remove(usuario);
+        salvarDados();
+        System.out.println("Usuário excluído com sucesso!");
+    }
+
     // Centralizar as validações evita duplicação e mantém o fluxo principal legível.
     private int lerNumeroInteiro(String mensagem) {
         while (true) {
@@ -340,6 +406,23 @@ public class Menu {
             }
 
             System.out.println("O campo não pode ficar vazio.");
+        }
+    }
+
+    private boolean lerConfirmacao(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            String resposta = leitor.nextLine().trim();
+
+            if (resposta.equalsIgnoreCase("S")) {
+                return true;
+            }
+
+            if (resposta.equalsIgnoreCase("N")) {
+                return false;
+            }
+
+            System.out.println("Digite S para confirmar ou N para cancelar.");
         }
     }
 
@@ -400,6 +483,8 @@ public class Menu {
         System.out.println("8 - Devolver livro");
         System.out.println("9 - Editar livro");
         System.out.println("10 - Editar usuário");
+        System.out.println("11 - Excluir livro");
+        System.out.println("12 - Excluir usuário");
         System.out.println("0 - Sair");
     }
 
