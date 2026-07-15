@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,17 +11,19 @@ public class Menu {
     private final Scanner leitor;
     private final List<Livro> livros;
     private final List<Usuario> usuarios;
+    private final RepositorioDados repositorioDados;
     private int proximoCodigoLivro;
     private int proximoCodigoUsuario;
 
     public Menu() {
         this.leitor = new Scanner(System.in);
+        this.repositorioDados = new RepositorioDados(Path.of("dados", "biblioteca.properties"));
 
-        // Usar a interface List reduz o acoplamento com a implementação ArrayList.
-        this.livros = new ArrayList<>();
-        this.usuarios = new ArrayList<>();
-        this.proximoCodigoLivro = 1;
-        this.proximoCodigoUsuario = 1;
+        DadosBiblioteca dados = carregarDados();
+        this.livros = dados.getLivros();
+        this.usuarios = dados.getUsuarios();
+        this.proximoCodigoLivro = dados.getProximoCodigoLivro();
+        this.proximoCodigoUsuario = dados.getProximoCodigoUsuario();
     }
 
     public void iniciar() {
@@ -76,6 +80,7 @@ public class Menu {
         Livro novoLivro = new Livro(proximoCodigoLivro, titulo, autor, anoPublicacao);
         livros.add(novoLivro);
         proximoCodigoLivro++;
+        salvarDados();
 
         System.out.println("Livro cadastrado com sucesso!");
     }
@@ -104,6 +109,7 @@ public class Menu {
         Usuario novoUsuario = new Usuario(proximoCodigoUsuario, nome, email);
         usuarios.add(novoUsuario);
         proximoCodigoUsuario++;
+        salvarDados();
 
         System.out.println("Usuário cadastrado com sucesso!");
     }
@@ -210,6 +216,7 @@ public class Menu {
         try {
             Livro livro = livroEncontrado.get();
             usuario.emprestarLivro(livro);
+            salvarDados();
             System.out.println("Empréstimo realizado com sucesso!");
         } catch (IllegalStateException excecao) {
             System.out.println(excecao.getMessage());
@@ -232,6 +239,7 @@ public class Menu {
 
         try {
             Livro livroDevolvido = usuarioEncontrado.get().devolverLivro();
+            salvarDados();
             System.out.println("Livro devolvido com sucesso: " + livroDevolvido.getTitulo());
         } catch (IllegalStateException excecao) {
             System.out.println(excecao.getMessage());
@@ -329,5 +337,23 @@ public class Menu {
         System.out.println("7 - Emprestar livro");
         System.out.println("8 - Devolver livro");
         System.out.println("0 - Sair");
+    }
+
+    private DadosBiblioteca carregarDados() {
+        try {
+            return repositorioDados.carregar();
+        } catch (IOException excecao) {
+            System.out.println("Não foi possível carregar os dados salvos: " + excecao.getMessage());
+            System.out.println("O programa será iniciado sem dados.");
+            return new DadosBiblioteca(new ArrayList<>(), new ArrayList<>(), 1, 1);
+        }
+    }
+
+    private void salvarDados() {
+        try {
+            repositorioDados.salvar(livros, usuarios, proximoCodigoLivro, proximoCodigoUsuario);
+        } catch (IOException excecao) {
+            System.out.println("Atenção: não foi possível salvar os dados: " + excecao.getMessage());
+        }
     }
 }

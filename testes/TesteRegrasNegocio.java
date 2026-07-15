@@ -1,3 +1,8 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
 public class TesteRegrasNegocio {
 
     private static int testesAprovados = 0;
@@ -11,6 +16,7 @@ public class TesteRegrasNegocio {
         executarTeste("Usuário sem empréstimo não pode devolver", TesteRegrasNegocio::deveBloquearDevolucaoSemEmprestimo);
         executarTeste("Livro disponível não pode ser devolvido", TesteRegrasNegocio::deveBloquearDevolucaoDeLivroDisponivel);
         executarTeste("Entidades rejeitam dados inválidos", TesteRegrasNegocio::deveRejeitarDadosInvalidos);
+        executarTeste("Dados permanecem após salvar e carregar", TesteRegrasNegocio::deveSalvarECarregarDados);
 
         System.out.println();
         System.out.println(testesAprovados + " testes aprovados com sucesso.");
@@ -88,6 +94,48 @@ public class TesteRegrasNegocio {
                 () -> new Usuario(1, "Ana", "email-invalido"));
     }
 
+    private static void deveSalvarECarregarDados() throws Exception {
+        Path pastaTemporaria = Files.createTempDirectory("biblioteca-teste-");
+        Path arquivo = pastaTemporaria.resolve("biblioteca.properties");
+
+        try {
+            Livro primeiroLivro = criarLivro(1, "Livro Um");
+            Livro segundoLivro = criarLivro(2, "Livro Dois");
+            Usuario usuario = criarUsuario(1, "Ana", "ana@exemplo.com");
+            usuario.emprestarLivro(segundoLivro);
+
+            List<Livro> livros = new ArrayList<>();
+            livros.add(primeiroLivro);
+            livros.add(segundoLivro);
+
+            List<Usuario> usuarios = new ArrayList<>();
+            usuarios.add(usuario);
+
+            RepositorioDados repositorio = new RepositorioDados(arquivo);
+            repositorio.salvar(livros, usuarios, 3, 2);
+            DadosBiblioteca dadosCarregados = repositorio.carregar();
+
+            verificar(dadosCarregados.getLivros().size() == 2,
+                    "Dois livros deveriam ser carregados.");
+            verificar(dadosCarregados.getUsuarios().size() == 1,
+                    "Um usuário deveria ser carregado.");
+            verificar(dadosCarregados.getProximoCodigoLivro() == 3,
+                    "O próximo código de livro deveria ser preservado.");
+            verificar(dadosCarregados.getProximoCodigoUsuario() == 2,
+                    "O próximo código de usuário deveria ser preservado.");
+
+            Livro livroCarregado = dadosCarregados.getLivros().get(1);
+            Usuario usuarioCarregado = dadosCarregados.getUsuarios().get(0);
+            verificar(!livroCarregado.isDisponivel(),
+                    "O livro emprestado deveria continuar indisponível.");
+            verificar(usuarioCarregado.getLivroEmprestado().orElseThrow() == livroCarregado,
+                    "O empréstimo deveria apontar para o livro carregado.");
+        } finally {
+            Files.deleteIfExists(arquivo);
+            Files.deleteIfExists(pastaTemporaria);
+        }
+    }
+
     private static Livro criarLivro(int codigo, String titulo) {
         return new Livro(codigo, titulo, "Autor", 2000);
     }
@@ -96,9 +144,9 @@ public class TesteRegrasNegocio {
         return new Usuario(codigo, nome, email);
     }
 
-    private static void executarTeste(String nome, Runnable teste) {
+    private static void executarTeste(String nome, AcaoTeste teste) {
         try {
-            teste.run();
+            teste.executar();
             testesAprovados++;
             System.out.println("APROVADO: " + nome);
         } catch (Throwable erro) {
@@ -124,5 +172,10 @@ public class TesteRegrasNegocio {
         }
 
         throw new AssertionError("A operação deveria lançar " + tipoEsperado.getSimpleName() + ".");
+    }
+
+    @FunctionalInterface
+    private interface AcaoTeste {
+        void executar() throws Exception;
     }
 }
