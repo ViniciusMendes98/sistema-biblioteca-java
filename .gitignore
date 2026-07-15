@@ -1,0 +1,10 @@
+# Arquivos gerados pela compilação do Java
+*.class
+
+# Pastas criadas por ambientes de desenvolvimento
+.idea/
+.vscode/
+
+# Arquivos temporários do sistema operacional
+.DS_Store
+Thumbs.db
