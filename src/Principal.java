@@ -1,30 +1,26 @@
 import java.util.Scanner;
 
-// Classe responsável por iniciar e controlar o programa.
 public class Principal {
 
-    // Método principal: é o primeiro método executado pelo Java.
     public static void main(String[] args) {
-        // O Scanner permite ler o que o usuário digita no terminal.
         Scanner leitor = new Scanner(System.in);
 
-        // A opção escolhida pelo usuário será guardada nesta variável.
+        // Objeto temporário enquanto o cadastro de livros ainda não foi implementado.
+        Livro livroExemplo = new Livro("Dom Casmurro", "Machado de Assis", 1899);
+
         int opcao;
 
-        // O bloco do-while executa o menu pelo menos uma vez.
         do {
             exibirMenu();
 
-            // Lê um número inteiro digitado pelo usuário.
             opcao = leitor.nextInt();
 
-            // O switch escolhe uma ação de acordo com a opção digitada.
             switch (opcao) {
                 case 1:
                     System.out.println("O cadastro de livros será criado na próxima etapa.");
                     break;
                 case 2:
-                    System.out.println("A listagem de livros será criada em uma etapa futura.");
+                    livroExemplo.exibirInformacoes();
                     break;
                 case 0:
                     System.out.println("Programa encerrado. Até logo!");
@@ -37,11 +33,10 @@ public class Principal {
             System.out.println();
         } while (opcao != 0);
 
-        // Fecha o Scanner depois que o programa termina.
         leitor.close();
     }
 
-    // Método separado para mostrar as opções disponíveis no menu.
+    // Separar o menu mantém o método principal focado no fluxo do programa.
     private static void exibirMenu() {
         System.out.println("=== SISTEMA DE BIBLIOTECA ===");
         System.out.println("1 - Cadastrar livro");
