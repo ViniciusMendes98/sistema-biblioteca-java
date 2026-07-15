@@ -7,12 +7,16 @@ public class Menu {
 
     private final Scanner leitor;
     private final List<Livro> livros;
+    private final List<Usuario> usuarios;
+    private int proximoCodigoUsuario;
 
     public Menu() {
         this.leitor = new Scanner(System.in);
 
         // Usar a interface List reduz o acoplamento com a implementação ArrayList.
         this.livros = new ArrayList<>();
+        this.usuarios = new ArrayList<>();
+        this.proximoCodigoUsuario = 1;
     }
 
     public void iniciar() {
@@ -28,6 +32,12 @@ public class Menu {
                     break;
                 case 2:
                     listarLivros();
+                    break;
+                case 3:
+                    cadastrarUsuario();
+                    break;
+                case 4:
+                    listarUsuarios();
                     break;
                 case 0:
                     System.out.println("Programa encerrado. Até logo!");
@@ -71,6 +81,31 @@ public class Menu {
         }
     }
 
+    private void cadastrarUsuario() {
+        String nome = lerTextoObrigatorio("Digite o nome: ");
+        String email = lerEmail();
+
+        Usuario novoUsuario = new Usuario(proximoCodigoUsuario, nome, email);
+        usuarios.add(novoUsuario);
+        proximoCodigoUsuario++;
+
+        System.out.println("Usuário cadastrado com sucesso!");
+    }
+
+    private void listarUsuarios() {
+        if (usuarios.isEmpty()) {
+            System.out.println("Nenhum usuário cadastrado.");
+            return;
+        }
+
+        System.out.println("=== USUÁRIOS CADASTRADOS ===");
+
+        for (Usuario usuario : usuarios) {
+            System.out.println(usuario);
+            System.out.println();
+        }
+    }
+
     // Centralizar as validações evita duplicação e mantém o fluxo principal legível.
     private int lerNumeroInteiro(String mensagem) {
         while (true) {
@@ -98,6 +133,33 @@ public class Menu {
         }
     }
 
+    private String lerEmail() {
+        while (true) {
+            String email = lerTextoObrigatorio("Digite o e-mail: ");
+
+            if (Usuario.isEmailValido(email)) {
+                if (!emailJaCadastrado(email)) {
+                    return email;
+                }
+
+                System.out.println("Já existe um usuário com esse e-mail.");
+                continue;
+            }
+
+            System.out.println("Digite um e-mail válido.");
+        }
+    }
+
+    private boolean emailJaCadastrado(String email) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getEmail().equalsIgnoreCase(email)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private int lerAnoPublicacao() {
         int anoAtual = Year.now().getValue();
 
@@ -116,6 +178,8 @@ public class Menu {
         System.out.println("=== SISTEMA DE BIBLIOTECA ===");
         System.out.println("1 - Cadastrar livro");
         System.out.println("2 - Listar livros");
+        System.out.println("3 - Cadastrar usuário");
+        System.out.println("4 - Listar usuários");
         System.out.println("0 - Sair");
     }
 }
