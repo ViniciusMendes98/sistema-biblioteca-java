@@ -1,8 +1,9 @@
+package modelo;
+
 import java.util.Optional;
 
 public class Usuario {
 
-    // O código representa a identidade do usuário e não deve mudar após o cadastro.
     private final int codigo;
     private String nome;
     private String email;
@@ -101,7 +102,6 @@ public class Usuario {
         Livro livroDevolvido = livroEmprestado;
         livroDevolvido.devolver();
         livroEmprestado = null;
-
         return livroDevolvido;
     }
 

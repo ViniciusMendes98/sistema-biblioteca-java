@@ -44,14 +44,32 @@ A classe `RepositorioDados` concentra a leitura e a gravação. Dessa forma, a c
 `Menu` continua cuidando da interação com o usuário e não precisa conhecer os detalhes
 do formato do arquivo.
 
-## Organização das classes
+## Arquitetura MVC
 
-- `Principal`: inicia a aplicação;
-- `Menu`: recebe dados e apresenta mensagens no terminal;
-- `Biblioteca`: gerencia coleções, códigos, buscas e exclusões;
-- `Livro` e `Usuario`: protegem os dados e as regras de negócio;
-- `RepositorioDados`: salva e carrega o arquivo;
-- `DadosBiblioteca`: transporta os dados entre a biblioteca e o repositório.
+O projeto utiliza uma versão simples do padrão MVC:
+
+- **Model (`modelo`)**: `Biblioteca`, `Livro`, `Usuario` e `DadosBiblioteca` representam os dados e protegem as regras de negócio;
+- **View (`visao`)**: `VisaoConsole` lê entradas e apresenta informações no terminal;
+- **Controller (`controlador`)**: `BibliotecaControlador` recebe as opções da View e coordena as operações do Model;
+- **Repositório (`repositorio`)**: `RepositorioDados` salva e carrega o arquivo, como uma camada de apoio ao MVC;
+- **Aplicação (`aplicacao`)**: `Principal` cria os objetos e inicia o sistema.
+
+```text
+src/
+|-- aplicacao/
+|   `-- Principal.java
+|-- controlador/
+|   `-- BibliotecaControlador.java
+|-- modelo/
+|   |-- Biblioteca.java
+|   |-- DadosBiblioteca.java
+|   |-- Livro.java
+|   `-- Usuario.java
+|-- repositorio/
+|   `-- RepositorioDados.java
+`-- visao/
+    `-- VisaoConsole.java
+```
 
 ## Conceitos praticados
 
@@ -69,13 +87,13 @@ do formato do arquivo.
 Primeiro, compile o programa:
 
 ```bash
-javac -encoding UTF-8 src/*.java
+javac -encoding UTF-8 -d saida src/modelo/*.java src/repositorio/*.java src/visao/*.java src/controlador/*.java src/aplicacao/*.java
 ```
 
 Depois, execute:
 
 ```bash
-java -cp src Principal
+java -cp saida aplicacao.Principal
 ```
 
 ## Como executar os testes
@@ -84,13 +102,13 @@ Crie a pasta de saída e compile o projeto com os testes:
 
 ```bash
 mkdir saida
-javac -encoding UTF-8 -d saida src/*.java testes/*.java
+javac -encoding UTF-8 -d saida src/modelo/*.java src/repositorio/*.java src/visao/*.java src/controlador/*.java src/aplicacao/*.java testes/*.java
 ```
 
 Execute a suíte:
 
 ```bash
-java -cp saida TesteRegrasNegocio
+java -cp saida testes.TesteRegrasNegocio
 ```
 
 ## Status

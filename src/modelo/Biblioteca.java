@@ -1,3 +1,5 @@
+package modelo;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -114,7 +116,6 @@ public class Biblioteca {
 
     public List<Livro> getLivrosDisponiveis() {
         List<Livro> livrosDisponiveis = new ArrayList<>();
-
         for (Livro livro : livros) {
             if (livro.isDisponivel()) {
                 livrosDisponiveis.add(livro);
@@ -126,7 +127,6 @@ public class Biblioteca {
 
     public List<Usuario> getUsuariosComEmprestimo() {
         List<Usuario> usuariosComEmprestimo = new ArrayList<>();
-
         for (Usuario usuario : usuarios) {
             if (usuario.possuiEmprestimoAtivo()) {
                 usuariosComEmprestimo.add(usuario);
