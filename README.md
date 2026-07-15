@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na décima segunda etapa, o projeto possui:
+Na décima terceira etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -43,6 +43,9 @@ Na décima segunda etapa, o projeto possui:
 - preservação do código identificador durante a edição;
 - exclusão de livros e usuários com confirmação;
 - bloqueio de exclusão quando existe empréstimo ativo;
+- relatório de livros disponíveis;
+- relatório de empréstimos ativos;
+- resumo com totais da biblioteca;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
@@ -98,4 +101,4 @@ java -cp saida TesteRegrasNegocio
 
 ## Próximas etapas
 
-1. Adicionar relatórios de livros e empréstimos.
+1. Separar as operações da biblioteca da classe `Menu`.

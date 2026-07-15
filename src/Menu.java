@@ -70,6 +70,15 @@ public class Menu {
                 case 12:
                     excluirUsuario();
                     break;
+                case 13:
+                    listarLivrosDisponiveis();
+                    break;
+                case 14:
+                    listarEmprestimosAtivos();
+                    break;
+                case 15:
+                    exibirResumo();
+                    break;
                 case 0:
                     System.out.println("Programa encerrado. Até logo!");
                     break;
@@ -370,6 +379,64 @@ public class Menu {
         System.out.println("Usuário excluído com sucesso!");
     }
 
+    private void listarLivrosDisponiveis() {
+        boolean encontrouLivro = false;
+
+        System.out.println("=== LIVROS DISPONÍVEIS ===");
+        for (Livro livro : livros) {
+            if (livro.isDisponivel()) {
+                System.out.println(livro.getCodigo() + " - " + livro.getTitulo());
+                encontrouLivro = true;
+            }
+        }
+
+        if (!encontrouLivro) {
+            System.out.println("Nenhum livro disponível.");
+        }
+    }
+
+    private void listarEmprestimosAtivos() {
+        boolean encontrouEmprestimo = false;
+
+        System.out.println("=== EMPRÉSTIMOS ATIVOS ===");
+        for (Usuario usuario : usuarios) {
+            if (usuario.possuiEmprestimoAtivo()) {
+                Livro livro = usuario.getLivroEmprestado().orElseThrow();
+                System.out.println("Usuário: " + usuario.getCodigo() + " - " + usuario.getNome());
+                System.out.println("Livro: " + livro.getCodigo() + " - " + livro.getTitulo());
+                System.out.println();
+                encontrouEmprestimo = true;
+            }
+        }
+
+        if (!encontrouEmprestimo) {
+            System.out.println("Nenhum empréstimo ativo.");
+        }
+    }
+
+    private void exibirResumo() {
+        int livrosDisponiveis = 0;
+        int emprestimosAtivos = 0;
+
+        for (Livro livro : livros) {
+            if (livro.isDisponivel()) {
+                livrosDisponiveis++;
+            }
+        }
+
+        for (Usuario usuario : usuarios) {
+            if (usuario.possuiEmprestimoAtivo()) {
+                emprestimosAtivos++;
+            }
+        }
+
+        System.out.println("=== RESUMO DA BIBLIOTECA ===");
+        System.out.println("Livros cadastrados: " + livros.size());
+        System.out.println("Livros disponíveis: " + livrosDisponiveis);
+        System.out.println("Livros emprestados: " + emprestimosAtivos);
+        System.out.println("Usuários cadastrados: " + usuarios.size());
+    }
+
     // Centralizar as validações evita duplicação e mantém o fluxo principal legível.
     private int lerNumeroInteiro(String mensagem) {
         while (true) {
@@ -485,6 +552,9 @@ public class Menu {
         System.out.println("10 - Editar usuário");
         System.out.println("11 - Excluir livro");
         System.out.println("12 - Excluir usuário");
+        System.out.println("13 - Listar livros disponíveis");
+        System.out.println("14 - Listar empréstimos ativos");
+        System.out.println("15 - Exibir resumo");
         System.out.println("0 - Sair");
     }
 
