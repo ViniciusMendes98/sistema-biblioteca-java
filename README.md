@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na décima etapa, o projeto possui:
+Na décima primeira etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -39,6 +39,8 @@ Na décima etapa, o projeto possui:
 - testes automatizados das regras de negócio em Java puro;
 - persistência de livros, usuários e empréstimos em arquivo;
 - restauração automática dos dados ao iniciar o programa;
+- edição de livros e usuários pelo código;
+- preservação do código identificador durante a edição;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
@@ -94,4 +96,4 @@ java -cp saida TesteRegrasNegocio
 
 ## Próximas etapas
 
-1. Adicionar edição e exclusão de cadastros.
+1. Adicionar exclusão de cadastros com regras de segurança.

@@ -17,6 +17,7 @@ public class TesteRegrasNegocio {
         executarTeste("Livro disponível não pode ser devolvido", TesteRegrasNegocio::deveBloquearDevolucaoDeLivroDisponivel);
         executarTeste("Entidades rejeitam dados inválidos", TesteRegrasNegocio::deveRejeitarDadosInvalidos);
         executarTeste("Dados permanecem após salvar e carregar", TesteRegrasNegocio::deveSalvarECarregarDados);
+        executarTeste("Edição mantém os códigos das entidades", TesteRegrasNegocio::deveEditarEntidades);
 
         System.out.println();
         System.out.println(testesAprovados + " testes aprovados com sucesso.");
@@ -134,6 +135,26 @@ public class TesteRegrasNegocio {
             Files.deleteIfExists(arquivo);
             Files.deleteIfExists(pastaTemporaria);
         }
+    }
+
+    private static void deveEditarEntidades() {
+        Livro livro = criarLivro(1, "Livro Um");
+        Usuario usuario = criarUsuario(1, "Ana", "ana@exemplo.com");
+
+        livro.setTitulo("Novo Título");
+        livro.setAutor("Novo Autor");
+        livro.setAnoPublicacao(2020);
+        usuario.setNome("Ana Souza");
+        usuario.setEmail("ana.souza@exemplo.com");
+
+        verificar(livro.getCodigo() == 1, "O código do livro não deveria mudar.");
+        verificar(livro.getTitulo().equals("Novo Título"), "O título deveria ser atualizado.");
+        verificar(livro.getAutor().equals("Novo Autor"), "O autor deveria ser atualizado.");
+        verificar(livro.getAnoPublicacao() == 2020, "O ano deveria ser atualizado.");
+        verificar(usuario.getCodigo() == 1, "O código do usuário não deveria mudar.");
+        verificar(usuario.getNome().equals("Ana Souza"), "O nome deveria ser atualizado.");
+        verificar(usuario.getEmail().equals("ana.souza@exemplo.com"),
+                "O e-mail deveria ser atualizado.");
     }
 
     private static Livro criarLivro(int codigo, String titulo) {
