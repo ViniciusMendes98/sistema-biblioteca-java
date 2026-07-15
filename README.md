@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na nona etapa, o projeto possui:
+Na décima etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -37,6 +37,8 @@ Na nona etapa, o projeto possui:
 - limite de um empréstimo ativo por usuário;
 - controle de disponibilidade pela própria classe `Livro`;
 - testes automatizados das regras de negócio em Java puro;
+- persistência de livros, usuários e empréstimos em arquivo;
+- restauração automática dos dados ao iniciar o programa;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
@@ -50,6 +52,16 @@ Na nona etapa, o projeto possui:
 - após a devolução, o usuário poderá pegar outro livro e o livro devolvido ficará disponível novamente.
 
 Essas regras são protegidas pelos métodos de negócio das classes `Usuario` e `Livro`.
+
+## Persistência dos dados
+
+O programa salva os dados automaticamente no arquivo `dados/biblioteca.properties`
+após cadastros, empréstimos e devoluções. Ao iniciar novamente, os dados são carregados
+sem necessidade de banco de dados ou biblioteca externa.
+
+A classe `RepositorioDados` concentra a leitura e a gravação. Dessa forma, a classe
+`Menu` continua cuidando da interação com o usuário e não precisa conhecer os detalhes
+do formato do arquivo.
 
 ## Como executar
 
@@ -82,4 +94,4 @@ java -cp saida TesteRegrasNegocio
 
 ## Próximas etapas
 
-1. Salvar os dados em arquivo.
+1. Adicionar edição e exclusão de cadastros.
