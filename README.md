@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na quinta etapa, o projeto possui:
+Na sexta etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -25,6 +25,11 @@ Na quinta etapa, o projeto possui:
 - classe `Principal` responsável apenas por iniciar a aplicação;
 - métodos `get`, `set`, `is` e `toString` seguindo convenções Java;
 - validações também protegidas dentro da classe `Livro`;
+- classe `Usuario` com código, nome e e-mail;
+- cadastro e listagem de usuários;
+- validação de formato de e-mail;
+- bloqueio de e-mails duplicados;
+- código sequencial e imutável para cada usuário;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
@@ -55,8 +60,7 @@ java -cp src Principal
 
 ## Próximas etapas
 
-1. Criar e cadastrar usuários.
-2. Buscar livros.
-3. Emprestar e devolver livros.
-4. Salvar os dados em arquivo.
-5. Adicionar testes automatizados.
+1. Buscar livros e usuários pelo código.
+2. Emprestar e devolver livros.
+3. Salvar os dados em arquivo.
+4. Adicionar testes automatizados.
