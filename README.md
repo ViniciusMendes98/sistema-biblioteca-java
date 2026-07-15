@@ -10,7 +10,7 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 
 ## Etapa atual
 
-Na quarta etapa, o projeto possui:
+Na quinta etapa, o projeto possui:
 
 - uma classe principal;
 - uma classe que representa um livro;
@@ -21,6 +21,10 @@ Na quarta etapa, o projeto possui:
 - validação de números com tratamento de exceções;
 - validação de título e autor obrigatórios;
 - validação do ano de publicação;
+- classe `Menu` responsável pela interação no terminal;
+- classe `Principal` responsável apenas por iniciar a aplicação;
+- métodos `get`, `set`, `is` e `toString` seguindo convenções Java;
+- validações também protegidas dentro da classe `Livro`;
 - um menu executado no terminal;
 - leitura da opção escolhida pelo usuário;
 - repetição do menu até que o usuário escolha sair;
@@ -40,7 +44,7 @@ Essas regras serão implementadas com uma classe `Usuario` e métodos de emprés
 Primeiro, compile o programa:
 
 ```bash
-javac -encoding UTF-8 src/Livro.java src/Principal.java
+javac -encoding UTF-8 src/*.java
 ```
 
 Depois, execute:
