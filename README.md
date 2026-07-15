@@ -8,50 +8,19 @@ Projeto de estudo desenvolvido passo a passo para praticar os fundamentos da lin
 - API padrão do Java;
 - nenhum framework ou dependência externa.
 
-## Etapa atual
+## Funcionalidades
 
-Na décima quarta etapa, o projeto possui:
-
-- uma classe principal;
-- uma classe que representa um livro;
-- atributos privados e métodos públicos;
 - cadastro de livros pelo terminal;
-- armazenamento de vários livros em uma `ArrayList`;
-- listagem dos livros cadastrados;
-- validação de números com tratamento de exceções;
-- validação de título e autor obrigatórios;
-- validação do ano de publicação;
-- classe `Menu` responsável pela interação no terminal;
-- classe `Principal` responsável apenas por iniciar a aplicação;
-- métodos `get`, `set`, `is` e `toString` seguindo convenções Java;
-- validações também protegidas dentro da classe `Livro`;
-- classe `Usuario` com código, nome e e-mail;
 - cadastro e listagem de usuários;
-- validação de formato de e-mail;
-- bloqueio de e-mails duplicados;
-- código sequencial e imutável para cada usuário;
-- código sequencial e imutável para cada livro;
 - busca de livros e usuários pelo código;
-- uso de `Optional` para representar resultados de busca;
 - empréstimo e devolução de livros;
-- limite de um empréstimo ativo por usuário;
-- controle de disponibilidade pela própria classe `Livro`;
-- testes automatizados das regras de negócio em Java puro;
-- persistência de livros, usuários e empréstimos em arquivo;
-- restauração automática dos dados ao iniciar o programa;
 - edição de livros e usuários pelo código;
-- preservação do código identificador durante a edição;
 - exclusão de livros e usuários com confirmação;
-- bloqueio de exclusão quando existe empréstimo ativo;
 - relatório de livros disponíveis;
 - relatório de empréstimos ativos;
 - resumo com totais da biblioteca;
-- classe `Biblioteca` responsável pelas coleções e operações de cadastro;
-- classe `Menu` focada na interação pelo terminal;
-- um menu executado no terminal;
-- leitura da opção escolhida pelo usuário;
-- repetição do menu até que o usuário escolha sair;
-- criação dinâmica de objetos `Livro`.
+- persistência automática em arquivo;
+- testes automatizados em Java puro.
 
 ## Regras de negócio
 
@@ -59,8 +28,11 @@ Na décima quarta etapa, o projeto possui:
 - cada usuário poderá ter somente um empréstimo ativo;
 - um livro indisponível não poderá ser emprestado;
 - após a devolução, o usuário poderá pegar outro livro e o livro devolvido ficará disponível novamente.
+- e-mails de usuários não poderão ser repetidos;
+- livros emprestados e usuários com empréstimo ativo não poderão ser excluídos;
+- códigos são sequenciais, imutáveis e não são reutilizados após uma exclusão.
 
-Essas regras são protegidas pelos métodos de negócio das classes `Usuario` e `Livro`.
+Essas regras são protegidas pelos métodos de negócio das classes `Biblioteca`, `Usuario` e `Livro`.
 
 ## Persistência dos dados
 
@@ -80,6 +52,17 @@ do formato do arquivo.
 - `Livro` e `Usuario`: protegem os dados e as regras de negócio;
 - `RepositorioDados`: salva e carrega o arquivo;
 - `DadosBiblioteca`: transporta os dados entre a biblioteca e o repositório.
+
+## Conceitos praticados
+
+- orientação a objetos e encapsulamento;
+- classes, construtores, métodos, `get`, `set` e `toString`;
+- coleções com `List` e `ArrayList`;
+- tratamento de exceções;
+- `Optional` para resultados de busca;
+- leitura e escrita de arquivos;
+- separação de responsabilidades;
+- testes automatizados sem framework externo.
 
 ## Como executar
 
@@ -110,6 +93,7 @@ Execute a suíte:
 java -cp saida TesteRegrasNegocio
 ```
 
-## Próximas etapas
+## Status
 
-1. Ampliar os testes de validação e finalizar a documentação.
+MVP concluído. O projeto cobre o fluxo principal de uma biblioteca de terminal e está
+pronto para receber melhorias futuras sem depender delas para demonstrar seu funcionamento.

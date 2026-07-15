@@ -25,10 +25,37 @@ public class Biblioteca {
     }
 
     public Usuario cadastrarUsuario(String nome, String email) {
+        if (emailJaCadastrado(email, null)) {
+            throw new IllegalArgumentException("Já existe um usuário com esse e-mail.");
+        }
+
         Usuario usuario = new Usuario(proximoCodigoUsuario, nome, email);
         usuarios.add(usuario);
         proximoCodigoUsuario++;
         return usuario;
+    }
+
+    public void editarLivro(Livro livro, String titulo, String autor, int anoPublicacao) {
+        livro.setTitulo(titulo);
+        livro.setAutor(autor);
+        livro.setAnoPublicacao(anoPublicacao);
+    }
+
+    public void editarUsuario(Usuario usuario, String nome, String email) {
+        if (emailJaCadastrado(email, usuario)) {
+            throw new IllegalArgumentException("Já existe um usuário com esse e-mail.");
+        }
+
+        usuario.setNome(nome);
+        usuario.setEmail(email);
+    }
+
+    public void realizarEmprestimo(Usuario usuario, Livro livro) {
+        usuario.emprestarLivro(livro);
+    }
+
+    public Livro realizarDevolucao(Usuario usuario) {
+        return usuario.devolverLivro();
     }
 
     public Optional<Livro> buscarLivroPorCodigo(int codigo) {
