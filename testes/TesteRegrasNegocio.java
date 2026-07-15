@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ public class TesteRegrasNegocio {
         executarTeste("Edição mantém os códigos das entidades", TesteRegrasNegocio::deveEditarEntidades);
         executarTeste("Empréstimo bloqueia exclusão", TesteRegrasNegocio::deveControlarExclusao);
         executarTeste("Biblioteca gerencia os cadastros", TesteRegrasNegocio::deveGerenciarBiblioteca);
+        executarTeste("Arquivo inexistente inicia biblioteca vazia", TesteRegrasNegocio::deveCarregarDadosVazios);
+        executarTeste("Arquivo corrompido é identificado", TesteRegrasNegocio::deveIdentificarArquivoCorrompido);
 
         System.out.println();
         System.out.println(testesAprovados + " testes aprovados com sucesso.");
@@ -193,6 +196,10 @@ public class TesteRegrasNegocio {
                 "A busca deveria retornar o usuário cadastrado.");
         verificar(biblioteca.emailJaCadastrado("ANA@EXEMPLO.COM", null),
                 "A verificação de e-mail não deveria diferenciar maiúsculas de minúsculas.");
+        esperarExcecao(IllegalArgumentException.class,
+                () -> biblioteca.cadastrarUsuario("Outra Ana", "ANA@EXEMPLO.COM"));
+        esperarExcecao(UnsupportedOperationException.class,
+                () -> biblioteca.getLivros().clear());
 
         usuario.emprestarLivro(livro);
         esperarExcecao(IllegalStateException.class, () -> biblioteca.excluirLivro(livro));
@@ -206,6 +213,39 @@ public class TesteRegrasNegocio {
         verificar(biblioteca.getUsuarios().isEmpty(), "O usuário deveria ser removido.");
         verificar(biblioteca.cadastrarLivro("Livro Dois", "Autor", 2001).getCodigo() == 2,
                 "O código excluído não deveria ser reutilizado.");
+    }
+
+    private static void deveCarregarDadosVazios() throws Exception {
+        Path pastaTemporaria = Files.createTempDirectory("biblioteca-vazia-");
+        Path arquivo = pastaTemporaria.resolve("inexistente.properties");
+
+        try {
+            DadosBiblioteca dados = new RepositorioDados(arquivo).carregar();
+
+            verificar(dados.getLivros().isEmpty(), "A lista de livros deveria iniciar vazia.");
+            verificar(dados.getUsuarios().isEmpty(), "A lista de usuários deveria iniciar vazia.");
+            verificar(dados.getProximoCodigoLivro() == 1,
+                    "O primeiro código de livro deveria ser 1.");
+            verificar(dados.getProximoCodigoUsuario() == 1,
+                    "O primeiro código de usuário deveria ser 1.");
+        } finally {
+            Files.deleteIfExists(pastaTemporaria);
+        }
+    }
+
+    private static void deveIdentificarArquivoCorrompido() throws Exception {
+        Path pastaTemporaria = Files.createTempDirectory("biblioteca-corrompida-");
+        Path arquivo = pastaTemporaria.resolve("biblioteca.properties");
+
+        try {
+            Files.writeString(arquivo, "livros.quantidade=valor-invalido");
+            RepositorioDados repositorio = new RepositorioDados(arquivo);
+
+            esperarExcecao(IOException.class, repositorio::carregar);
+        } finally {
+            Files.deleteIfExists(arquivo);
+            Files.deleteIfExists(pastaTemporaria);
+        }
     }
 
     private static Livro criarLivro(int codigo, String titulo) {
@@ -232,10 +272,10 @@ public class TesteRegrasNegocio {
         }
     }
 
-    private static void esperarExcecao(Class<? extends RuntimeException> tipoEsperado, Runnable acao) {
+    private static void esperarExcecao(Class<? extends Exception> tipoEsperado, AcaoTeste acao) {
         try {
-            acao.run();
-        } catch (RuntimeException excecao) {
+            acao.executar();
+        } catch (Exception excecao) {
             if (tipoEsperado.isInstance(excecao)) {
                 return;
             }

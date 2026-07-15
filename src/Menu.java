@@ -206,7 +206,7 @@ public class Menu {
 
         try {
             Livro livro = livroEncontrado.get();
-            usuario.emprestarLivro(livro);
+            biblioteca.realizarEmprestimo(usuario, livro);
             salvarDados();
             System.out.println("Empréstimo realizado com sucesso!");
         } catch (IllegalStateException excecao) {
@@ -229,7 +229,7 @@ public class Menu {
         }
 
         try {
-            Livro livroDevolvido = usuarioEncontrado.get().devolverLivro();
+            Livro livroDevolvido = biblioteca.realizarDevolucao(usuarioEncontrado.get());
             salvarDados();
             System.out.println("Livro devolvido com sucesso: " + livroDevolvido.getTitulo());
         } catch (IllegalStateException excecao) {
@@ -256,9 +256,7 @@ public class Menu {
         String autor = lerTextoObrigatorio("Digite o novo autor: ");
         int anoPublicacao = lerAnoPublicacao();
 
-        livro.setTitulo(titulo);
-        livro.setAutor(autor);
-        livro.setAnoPublicacao(anoPublicacao);
+        biblioteca.editarLivro(livro, titulo, autor, anoPublicacao);
         salvarDados();
 
         System.out.println("Livro atualizado com sucesso!");
@@ -282,8 +280,7 @@ public class Menu {
         String nome = lerTextoObrigatorio("Digite o novo nome: ");
         String email = lerEmail(usuario);
 
-        usuario.setNome(nome);
-        usuario.setEmail(email);
+        biblioteca.editarUsuario(usuario, nome, email);
         salvarDados();
 
         System.out.println("Usuário atualizado com sucesso!");
